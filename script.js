@@ -15,6 +15,7 @@ function fetchUser(username) {
     .then(response => response.json())
     .then(user => {
       numberofpages = Math.ceil(user.public_repos/perPage);
+      createPageButtons(numberofpages);
       console.log(numberofpages);
       const profilePic = `<img src="${user.avatar_url}" alt="Profile Picture">`;
       const locationicon = `<img src="${user.avatar_url}" alt="Profile Picture">`;
@@ -58,6 +59,48 @@ function fetchRepositories(username, page) {
 }
 fetchRepositories(username, currentPage);
 
+function createPageButtons(numberofpages) {
+  const buttonsContainer = document.querySelector('.pagelist');
+  buttonsContainer.innerHTML = '';
+
+  const firstButton = document.createElement('button');
+  firstButton.textContent = '<<';
+  firstButton.value = 1;
+  firstButton.classList.add('page-button');
+  firstButton.addEventListener('click', () => {
+    if (currentPage !== 1) {
+      currentPage = 1;
+      fetchRepositories(username, currentPage);
+    }
+  });
+  buttonsContainer.appendChild(firstButton);
+
+  for (let i = 1; i <= numberofpages; i++) {
+    const button = document.createElement('button');
+    button.textContent = i;
+    button.value = i;
+    button.classList.add('page-button');
+    button.addEventListener('click', () => {
+      if (currentPage !== i) {
+        currentPage = i;
+        fetchRepositories(username, currentPage);
+      }
+    });
+    buttonsContainer.appendChild(button);
+  }
+
+  const lastButton = document.createElement('button');
+  lastButton.textContent = '>>';
+  lastButton.value = numberofpages;
+  lastButton.classList.add('page-button');
+  lastButton.addEventListener('click', () => {
+    if (currentPage !== numberofpages) {
+      currentPage = numberofpages;
+      fetchRepositories(username, currentPage);
+    }
+  });
+  buttonsContainer.appendChild(lastButton);
+}
 document.querySelector('.next').addEventListener('click', () => {
   currentPage++;
   console.log(currentPage);
