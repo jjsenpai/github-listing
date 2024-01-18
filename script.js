@@ -1,25 +1,51 @@
-const username = 'jjsenpai';
-const accessToken = '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';
+const username = 'johnpapa';
+const accessToken = '';
+let perPage = 10;
+let currentPage = 2;
 function fetchUser(username) {
   fetch(`https://api.github.com/users/${username}`)
     .then(response => response.json())
     .then(user => {
       const profilePic = `<img src="${user.avatar_url}" alt="Profile Picture">`;
+      const locationicon = `<img src="${user.avatar_url}" alt="Profile Picture">`;
       document.querySelector('.user-profile').innerHTML = profilePic;
       document.querySelector('.username').innerHTML = `${user.name}`;
-      document.querySelector('.repo').innerHTML = `${user.html_url}`;
-      if(user.bio)
-      document.querySelector('.bio').innerHTML = `${user.bio}`;
-    if(user.location)
-    document.querySelector('.location').innerHTML = `${user.location}`;
-    if(user.twitter_username)
-      document.querySelector('.twitter').innerHTML = `${user.twitter_username}`;
+      document.querySelector('.repo').innerHTML = `<img src="./assets/link.png" class="licon" alt=loc><a href="${user.html_url}" class="textblack">${user.html_url}</a>`;
+      if (user.bio) document.querySelector('.bio').innerHTML = `${user.bio}`;
+      if (user.location) document.querySelector('.location').innerHTML = `<img src="./assets/location.png" class="licon" alt=loc>  ${user.location}`;
+      if (user.twitter_username) document.querySelector('.twitter').innerHTML = `Twitter: @${user.twitter_username}`;
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
     });
 }
 // fetchUser(username);
+function fetchRepositories(username, page) {
+  fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=${perPage}`, {
+    headers: {
+      Authorization: `token ${accessToken}`
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      const repos = data.map((repo)=>{
+        const topics = repo.topics.length > 0 ? `<p>Topics: ${repo.topics.join(', ')}</p>` : '';
+        const desc= repo.description ? `<p>${repo.description}</p>` : '';
+            return `<div class="card flex-col">
+                      <h3 class="textblue" >${repo.name}</h3>
+                      ${desc}
+                      ${topics}
+                    </div>`;
+      }).join('');
+      console.log(repos);
+      document.querySelector('.cardswrapper').innerHTML = repos;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+}
+fetchRepositories(username, currentPage);
 const user = {
   "login": "johnpapa",
   "id": 1202528,

@@ -4,11 +4,16 @@ body{
     font-size: medium;
     border: 2px solid;
     padding-left: 50px;
+    padding-right: 50px;
 }
 .main{
     margin-top: 20px;
     display: flex;
     gap: 50px;
+}
+.flex-col{
+    display: flex;
+    flex-direction: column;
 }
 .user-profile img {
     border-radius: 50%;
@@ -35,4 +40,21 @@ body{
 }
 .repo{
     padding-top: 15px;
+}
+.cardswrapper{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    justify-content: space-between;
+    gap: 20px;
+}
+.card{
+    flex: 0 0 calc(50% - 50px);
+    padding: 10px;
+    margin: 5px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+}
+.textblue{
+    color: hwb(220 22% 12%);
 }
