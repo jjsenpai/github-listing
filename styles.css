@@ -1,0 +1,21 @@
+body{
+    font-family: Arial, sans-serif;
+    font-weight: 500;
+    font-size: medium;
+}
+.main{
+    margin-left: 50px;
+    margin-top: 20px;
+    display: flex;
+    gap: 50px;
+}
+.user-profile img {
+    border-radius: 50%; /* Make the image round */
+    border: 2px solid #000; /* Add a 2px black border */
+    width: 200px; /* Set the width to 100px */
+    height: 200px; /* Set the height to 100px */
+  }
+.username{
+    font-size: xx-large;
+    font-weight: 500;
+}
