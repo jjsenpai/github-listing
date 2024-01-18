@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const username = 'johnpapa';
 const accessToken = '';
 let perPage = 10;
-let currentPage = 2;
+let currentPage = 1;
 let numberofpages;
 
 function fetchUser(username) {
@@ -16,21 +16,21 @@ function fetchUser(username) {
     .then(user => {
       numberofpages = Math.ceil(user.public_repos/perPage);
       createPageButtons(numberofpages);
+      updateActiveButton();
       console.log(numberofpages);
       const profilePic = `<img src="${user.avatar_url}" alt="Profile Picture">`;
       const locationicon = `<img src="${user.avatar_url}" alt="Profile Picture">`;
       document.querySelector('.user-profile').innerHTML = profilePic;
       document.querySelector('.username').innerHTML = `${user.name}`;
-      document.querySelector('.repo').innerHTML = `<img src="./assets/link.png" class="licon" alt=loc><a href="${user.html_url}" class="textblack">${user.html_url}</a>`;
+      document.querySelector('.repo').innerHTML = `<img src="./assets/link.png" class="licon" alt=loc><a href="${user.html_url}" target="_blank" class="textblack">${user.html_url}</a>`;
       if (user.bio) document.querySelector('.bio').innerHTML = `${user.bio}`;
       if (user.location) document.querySelector('.location').innerHTML = `<img src="./assets/location.png" class="licon" alt=loc>  ${user.location}`;
-      if (user.twitter_username) document.querySelector('.twitter').innerHTML = `Twitter: @${user.twitter_username}`;
+      if (user.twitter_username) document.querySelector('.twitter').innerHTML = `Twitter: https://twitter.com/${user.twitter_username}`;
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
     });
 }
-fetchUser(username);
 function fetchRepositories(username, page) {
   fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=${perPage}`, {
     headers: {
@@ -45,19 +45,17 @@ function fetchRepositories(username, page) {
         }).join('') : '';
         const desc= repo.description ? `<p>${repo.description}</p>` : '';
             return `<div class="card flex-col">
-                      <h3 class="textblue" >${repo.name}</h3>
+                      <a class="textblue" href="${repo.html_url}">${repo.name}</a>
                       ${desc}
                       ${topics? `<div class="twrapper flex">${topics}</div>` :''}
                     </div>`;
       }).join('');
-      console.log(repos);
       document.querySelector('.cardswrapper').innerHTML = repos;
     })
     .catch(error => {
       console.error('Error fetching data:', error);
     });
 }
-fetchRepositories(username, currentPage);
 
 function createPageButtons(numberofpages) {
   const buttonsContainer = document.querySelector('.pagelist');
@@ -71,6 +69,7 @@ function createPageButtons(numberofpages) {
     if (currentPage !== 1) {
       currentPage = 1;
       fetchRepositories(username, currentPage);
+      updateActiveButton();
     }
   });
   buttonsContainer.appendChild(firstButton);
@@ -84,6 +83,8 @@ function createPageButtons(numberofpages) {
       if (currentPage !== i) {
         currentPage = i;
         fetchRepositories(username, currentPage);
+      updateActiveButton();
+
       }
     });
     buttonsContainer.appendChild(button);
@@ -96,22 +97,44 @@ function createPageButtons(numberofpages) {
   lastButton.addEventListener('click', () => {
     if (currentPage !== numberofpages) {
       currentPage = numberofpages;
+      updateActiveButton();
       fetchRepositories(username, currentPage);
     }
   });
   buttonsContainer.appendChild(lastButton);
 }
+
+function updateActiveButton() {
+  const buttons = document.querySelectorAll('.page-button');
+  buttons.forEach(button => {
+    if (parseInt(button.textContent) === currentPage) {
+      button.classList.add('activebutton');
+    } else {
+      button.classList.remove('activebutton');
+    }
+  });
+}
+
+
 document.querySelector('.next').addEventListener('click', () => {
+  if (currentPage < numberofpages) {
   currentPage++;
-  console.log(currentPage);
   fetchRepositories(username, currentPage);
+  updateActiveButton();
+  }
 });
 
 document.querySelector('.footer .prev').addEventListener('click', () => {
   if (currentPage > 1) {
     currentPage--;
     fetchRepositories(username, currentPage);
+updateActiveButton();
+
   }
 });
+fetchUser(username);
+fetchRepositories(username, currentPage);
+
+updateActiveButton();
 
 });
