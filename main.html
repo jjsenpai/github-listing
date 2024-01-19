@@ -9,7 +9,28 @@
   </head>
   <body>
     <div class="main">
-      <div class="user-profile">Getting Started</div>
+      <form id="githubForm">
+        <div class="input-section">
+          <input
+            type="text"
+            id="usernameInput"
+            name="username"
+            placeholder="Enter GitHub username"
+          />
+          <input
+            type="number"
+            id="perPageInput"
+            name="perPage"
+            min="10"
+            max="100"
+            step="10"
+            value="10"
+          />
+          <button type="submit">Submit</button>
+          <p id="errorText" class="error-text"></p>
+        </div>
+      </form>
+      <div class="user-profile"></div>
       <div class="rightsection">
         <h1 class="username"></h1>
         <p class="bio"></p>
@@ -22,10 +43,7 @@
     <div class="footerwrapper">
       <div class="footer">
         <div class="pagelist"></div>
-        <div class="buttonwrapper">
-          <button class="prev button">Older</button>
-          <button class="next button">Newer</button>
-        </div>
+        <div class="buttonwrapper"></div>
       </div>
     </div>
   </body>

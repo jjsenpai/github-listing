@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-const username = 'johnpapa';
+let username;
 const accessToken = '';
 let perPage = 10;
 let currentPage = 1;
@@ -12,23 +12,40 @@ function fetchUser(username) {
       Authorization: `token ${accessToken}`
     }
   })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('User not found');
+      }
+      return response.json();
+    })
     .then(user => {
-      numberofpages = Math.ceil(user.public_repos/perPage);
-      createPageButtons(numberofpages);
-      updateActiveButton();
-      console.log(numberofpages);
+      numberofpages = Math.ceil(user.public_repos / perPage);
+      
       const profilePic = `<img src="${user.avatar_url}" alt="Profile Picture">`;
-      const locationicon = `<img src="${user.avatar_url}" alt="Profile Picture">`;
       document.querySelector('.user-profile').innerHTML = profilePic;
-      document.querySelector('.username').innerHTML = `${user.name}`;
+      if (user.username){
+        document.querySelector('.username').innerHTML = `${user.name}`;
+      } 
+      else {
+        document.querySelector('.username').innerHTML = "invalid name"
+      } 
       document.querySelector('.repo').innerHTML = `<img src="./assets/link.png" class="licon" alt=loc><a href="${user.html_url}" target="_blank" class="textblack">${user.html_url}</a>`;
       if (user.bio) document.querySelector('.bio').innerHTML = `${user.bio}`;
       if (user.location) document.querySelector('.location').innerHTML = `<img src="./assets/location.png" class="licon" alt=loc>  ${user.location}`;
       if (user.twitter_username) document.querySelector('.twitter').innerHTML = `Twitter: https://twitter.com/${user.twitter_username}`;
+      if(user.public_repos!==0){
+        createPageButtons(numberofpages);
+        updateActiveButton();
+        fetchRepositories(username, currentPage);
+      }else{
+        document.querySelector('.buttonwrapper').innerHTML=`<div>User has no repositories</div>`
+      }
+      hideLoadingIndicator();
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
+      document.getElementById('errorText').textContent = 'Invalid username';
+      hideLoadingIndicator();
     });
 }
 function fetchRepositories(username, page) {
@@ -51,12 +68,32 @@ function fetchRepositories(username, page) {
                     </div>`;
       }).join('');
       document.querySelector('.cardswrapper').innerHTML = repos;
+      document.querySelector('.buttonwrapper').innerHTML = `<button class="prev button">
+      <span class="arrow">← </span>Older
+    </button>
+    <button class="next button">
+      Newer<span class="arrow"> →</span>
+    </button>`;
+    document.querySelector('.next').addEventListener('click', () => {
+      if (currentPage < numberofpages) {
+      currentPage++;
+      fetchRepositories(username, currentPage);
+      updateActiveButton();
+      }
+    });
+    
+    document.querySelector('.footer .prev').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchRepositories(username, currentPage);
+    updateActiveButton();
+      }
+    });
     })
     .catch(error => {
       console.error('Error fetching data:', error);
     });
 }
-
 function createPageButtons(numberofpages) {
   const buttonsContainer = document.querySelector('.pagelist');
   buttonsContainer.innerHTML = '';
@@ -103,7 +140,6 @@ function createPageButtons(numberofpages) {
   });
   buttonsContainer.appendChild(lastButton);
 }
-
 function updateActiveButton() {
   const buttons = document.querySelectorAll('.page-button');
   buttons.forEach(button => {
@@ -114,27 +150,40 @@ function updateActiveButton() {
     }
   });
 }
+function showLoadingIndicator() {
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.classList.add('loading');
+  loadingIndicator.textContent = 'Loading...';
+  document.body.appendChild(loadingIndicator);
+}
+function hideLoadingIndicator() {
+  const loadingIndicator = document.querySelector('.loading');
+  if (loadingIndicator) {
+    loadingIndicator.remove();
+  }
+}
 
-
-document.querySelector('.next').addEventListener('click', () => {
-  if (currentPage < numberofpages) {
-  currentPage++;
-  fetchRepositories(username, currentPage);
-  updateActiveButton();
+document.getElementById('githubForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  username = formData.get('username').trim();
+  perPage = parseInt(formData.get('perPage'));
+  if (username) {
+    showLoadingIndicator();
+    document.querySelector('.user-profile').innerHTML = '';
+    document.querySelector('.username').innerHTML = '';
+    document.querySelector('.repo').innerHTML = '';
+    document.querySelector('.bio').innerHTML = '';
+    document.querySelector('.location').innerHTML = '';
+    document.querySelector('.twitter').innerHTML = '';
+    document.querySelector('.cardswrapper').innerHTML = '';
+    document.querySelector('.pagelist').innerHTML = '';
+    document.querySelector('.buttonwrapper').innerHTML = '';
+    document.getElementById('errorText').textContent = '';
+    fetchUser(username);
+  } else {
+    document.getElementById('errorText').textContent = 'Please enter a username';
   }
 });
-
-document.querySelector('.footer .prev').addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage--;
-    fetchRepositories(username, currentPage);
-updateActiveButton();
-
-  }
-});
-fetchUser(username);
-fetchRepositories(username, currentPage);
-
-updateActiveButton();
 
 });
