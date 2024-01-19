@@ -72,11 +72,11 @@ function fetchRepositories(username, page) {
                     </div>`;
       }).join('');
       document.querySelector('.cardswrapper').innerHTML = repos;
-      document.querySelector('.buttonwrapper').innerHTML = `<button class="prev button">
+      document.querySelector('.buttonwrapper').innerHTML = `<button type="button" class="prev button">
       <span class="arrow">← </span>Older
     </button>
-    <button class="next button">
-      Newer<span class="arrow"> →</span>
+    <button type="button" class="next button">
+      <span class="span">Newer</span><span class=" span arrow">→</span>
     </button>`;
     document.querySelector('.next').addEventListener('click', () => {
       if (currentPage < numberofpages) {

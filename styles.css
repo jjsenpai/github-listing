@@ -13,7 +13,8 @@ body{
 }
 .userinfo{
     margin-top: 20px;
-    display: flex;  
+    display: flex;
+    flex-direction: column;  
     gap: 50px;
 }
 .flex-col{
@@ -49,9 +50,22 @@ body{
 .cardswrapper{
     display: grid;
     margin-top: 40px;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 20px;
 }
+@media (min-width: 768px) {
+    .cardswrapper {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .userinfo{
+        flex-direction: row;
+    }
+    .page-button{
+        padding: 7px;
+        min-height: 30px;
+        min-width: 25px;
+    }
+  }
 .card{
     padding: 10px;
     padding-top: 0px;
@@ -89,6 +103,7 @@ body{
     width: 100%;
 }
 .button{
+    display: flex;
     background: none;
     width: fit-content;
     cursor: pointer;
@@ -99,7 +114,11 @@ body{
     padding-bottom: 7px;
     padding-left: 10px;
     padding-right: 10px;
-
+}
+.arrow{
+    font-weight: bolder;
+    font-size: xx-large;
+    line-height: 10px;
 }
 .activebutton {
     background: none !important;
@@ -113,6 +132,9 @@ body{
   }
 .pagelist{
     width: fit-content;
+    display: flex;
+    flex-shrink: 1;
+    flex-wrap: wrap
 }
 .footerwrapper{
     display: flex;
@@ -133,13 +155,9 @@ body{
   .page-button {
     background: none;
     border: 1px solid gray;
-    padding: 7px;
-    min-height: 30px;
-    min-width: 25px;
+    padding: 5px;
+    min-height: 20px;
+    min-width: 15px;
     color: hwb(220 22% 12%);
     cursor: pointer;
   }
-.arrow{
-    font-weight: bolder;
-    font-size: large;
-}
