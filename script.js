@@ -25,11 +25,11 @@ function fetchUser(username) {
       
       const profilePic = `<img src="${user.avatar_url}" alt="Profile Picture">`;
       document.querySelector('.user-profile').innerHTML = profilePic;
-      if (user.username){
+      if (user.name!==null){
         document.querySelector('.username').innerHTML = `${user.name}`;
       } 
       else {
-        document.querySelector('.username').innerHTML = "invalid name"
+        document.querySelector('.username').innerHTML = "invalid name";
       } 
       document.querySelector('.repo').innerHTML = `<img src="./assets/link.png" class="licon" alt=loc><a href="${user.html_url}" target="_blank" class="textblack">${user.html_url}</a>`;
       if (user.bio) document.querySelector('.bio').innerHTML = `${user.bio}`;
