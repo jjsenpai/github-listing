@@ -8,7 +8,12 @@ body{
 }
 .main{
     margin-top: 20px;
-    display: flex;
+    display: flex;  
+    gap: 50px;
+}
+.userinfo{
+    margin-top: 20px;
+    display: flex;  
     gap: 50px;
 }
 .flex-col{

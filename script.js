@@ -7,11 +7,13 @@ let currentPage = 1;
 let numberofpages;
 
 function fetchUser(username) {
-  fetch(`https://api.github.com/users/${username}`, {
-    headers: {
-      Authorization: `token ${accessToken}`
-    }
-  })
+  fetch(`https://api.github.com/users/${username}`
+  // , {
+  //   headers: {
+  //     Authorization: `token ${accessToken}`
+  //   }
+  // }
+  )
     .then(response => {
       if (!response.ok) {
         throw new Error('User not found');
@@ -49,11 +51,13 @@ function fetchUser(username) {
     });
 }
 function fetchRepositories(username, page) {
-  fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=${perPage}`, {
-    headers: {
-      Authorization: `token ${accessToken}`
-    }
-  })
+  fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=${perPage}`
+  // , {
+  //   headers: {
+  //     Authorization: `token ${accessToken}`
+  //   }
+  // }
+  )
     .then(response => response.json())
     .then(data => {      
       const repos = data.map((repo)=>{
