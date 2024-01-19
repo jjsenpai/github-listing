@@ -9,7 +9,8 @@
   </head>
   <body>
     <div class="main">
-      <form id="githubForm">
+      <h1>GitHub Repository Listing</h1>
+      <form id="githubForm" class="githubform">
         <div class="input-section">
           <input
             type="text"
@@ -20,11 +21,12 @@
           <input
             type="number"
             id="perPageInput"
+            class="perpageinput"
             name="perPage"
             min="10"
             max="100"
             step="10"
-            value="10"
+            placeholder="Repos per page (def:10)"
           />
           <button type="submit">Submit</button>
           <p id="errorText" class="error-text"></p>
@@ -40,7 +42,9 @@
         <p class="twitter"></p>
       </div>
     </div>
-    <div class="repo flex-align"></div>
+    <div>
+      <div class="repo flex-align"></div>
+    </div>
     <div class="cardswrapper"></div>
     <div class="footerwrapper">
       <div class="footer">

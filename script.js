@@ -171,7 +171,7 @@ document.getElementById('githubForm').addEventListener('submit', event => {
   event.preventDefault();
   const formData = new FormData(event.target);
   username = formData.get('username').trim();
-  perPage = parseInt(formData.get('perPage'));
+  perPage = parseInt(formData.get('perPage')?formData.get('perPage'):10);
   if (username) {
     showLoadingIndicator();
     document.querySelector('.user-profile').innerHTML = '';
